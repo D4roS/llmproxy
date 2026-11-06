@@ -254,6 +254,11 @@ path = "/metrics"     # path under which metrics are served
 | `llmproxy_backend_duration_seconds` | Histogram | `model` | Backend response latency |
 | `llmproxy_backend_errors_total` | Counter | `model`, `error_type` | Backend errors (timeout, connection, client_error) |
 | `llmproxy_tokens_total` | Counter | `model`, `type` | Tokens processed (prompt, completion, embedding) |
+
+Counters reset to zero on process restart. Consume them with `rate()`/`increase()`
+(reset-aware), never with a raw `sum()` — the "Total Tokens (cumulative)"
+dashboard panel uses `increase()` plus Grafana's cumulative-function transform
+so the total keeps growing across restarts.
 | `llmproxy_audio_seconds_total` | Counter | `model` | Seconds of audio transcribed |
 | `llmproxy_file_conversions_total` | Counter | `model` | PDF pages converted to Markdown |
 | `llmproxy_user_requests_total` | Counter | `user`, `model` | Admitted requests per user (api-key comment, else key id) and model |
